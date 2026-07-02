@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Personal TypeScript learning repo — notes, practice code, and snippets, built while going from React (JavaScript) to full-stack TypeScript.",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "node dist/practice/index.js",
     "dev": "npx tsc"
@@ -19,6 +20,7 @@
   },
   "homepage": "https://github.com/anjumhere/ts-notes#readme",
   "devDependencies": {
+    "@types/node": "^26.1.0",
     "typescript": "^6.0.3"
   }
 }

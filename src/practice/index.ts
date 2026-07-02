@@ -3,4 +3,5 @@ function greet(person: string): string {
 }
 
 const username: string = "Jace";
+
 console.log(greet(username));
