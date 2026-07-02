@@ -1,0 +1,23 @@
+{
+  "name": "typescript",
+  "version": "1.0.0",
+  "description": "Personal TypeScript learning repo — notes, practice code, and snippets, built while going from React (JavaScript) to full-stack TypeScript.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anjumhere/ts-notes.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anjumhere/ts-notes/issues"
+  },
+  "homepage": "https://github.com/anjumhere/ts-notes#readme",
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  }
+}
