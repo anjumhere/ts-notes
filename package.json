@@ -5,8 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node dist/practice/index.js",
-    "dev": "npx tsc"
+    "clean": "rm -rf dist",
+    "build": "npx tsc",
+    "build:run": "npm run clean && npm run build && node dist/practice/index.js"
   },
   "repository": {
     "type": "git",

@@ -131,3 +131,26 @@ let x = "hello";
 | Binder  | Figure out who's who                  |
 | Checker | Make sure nobody's breaking the rules |
 | Emitter | Throw away the rules, ship the JS     |
+
+# Union and Any
+
+## Union
+
+A union type describes a value that can be one of several types. It's declared by separating each type with a pipe (`|`) symbol.
+
+```ts
+let value: string | number;
+```
+
+The variable is restricted to only the types listed in the union.
+
+## Any
+
+`any` disables TypeScript's type-checking. A variable typed `any` can be assigned any value, reassigned to any other type, and have any method or property accessed on it — without the compiler checking any of it.
+
+```ts
+let value: any;
+value = "hello";
+value = 42;
+value.whatever(); // no error, even though this would crash at runtime
+```
