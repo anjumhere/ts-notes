@@ -154,3 +154,134 @@ value = "hello";
 value = 42;
 value.whatever(); // no error, even though this would crash at runtime
 ```
+
+# Type Aliases
+
+A `type` alias gives a name to any type — primitives, unions, objects, functions, anything. Once named, you reuse it instead of repeating the shape everywhere.
+
+```ts
+type ID = string | number;
+
+let userId: ID = 101;
+let productId: ID = "SKU-42";
+```
+
+Type aliases don't create a new type — they're just a label pointing to an existing type definition. Renaming the alias doesn't change what it represents underneath.
+
+---
+
+# Interfaces
+
+An `interface` describes the **shape of an object** — what properties and methods it must have, and their types. Unlike `type`, interfaces are specifically built for describing object structures (and can be extended).
+
+```ts
+interface User {
+  id: number;
+  name: string;
+  isActive: boolean;
+}
+
+const anjum: User = {
+  id: 1,
+  name: "Anjum",
+  isActive: true,
+};
+```
+
+### Interface vs Type Alias (the practical difference)
+
+```ts
+interface Animal {
+  name: string;
+}
+interface Animal {
+  age: number; // merges automatically with the one above
+}
+// Animal now requires both name AND age
+
+type Car = { brand: string };
+type Car = { year: number }; // ERROR — type aliases can't be redeclared
+```
+
+Interfaces can be **declared multiple times and get merged** — TypeScript combines them into one. Type aliases cannot; declaring the same type alias twice is an error. This is the main practical reason libraries often prefer `interface` for public object shapes (so consumers can extend them later).
+
+---
+
+# Literal Types
+
+A literal type restricts a variable to one **exact, specific value** — not just a general type like `string`, but the literal `"pending"` itself.
+
+```ts
+let status: "pending";
+status = "pending"; // OK
+status = "done"; // ERROR — only "pending" is allowed
+```
+
+This becomes genuinely useful combined with a union (which you already know):
+
+```ts
+let reqStatus: "pending" | "success" | "error";
+reqStatus = "success"; // OK
+reqStatus = "loading"; // ERROR — not in the allowed set
+```
+
+Literal types are the building block behind how unions like `"pending" | "success" | "error"` actually work under the hood — each option in that union IS a literal type.
+
+---
+
+# Tuples
+
+A tuple is an array with a **fixed number of elements**, where each position has its own specific type. Regular arrays don't care about position or length — tuples do.
+
+```ts
+let user: [string, number];
+user = ["Anjum", 25]; // OK — string first, number second
+user = [25, "Anjum"]; // ERROR — wrong order
+user = ["Anjum", 25, true]; // ERROR — too many elements
+```
+
+### Example — why this matters
+
+```ts
+// Without a tuple, order isn't enforced:
+let coordinates: number[] = [10, 20]; // fine, but so is [1,2,3,4,5]
+
+// With a tuple, exactly 2 numbers, in this order, nothing more:
+let point: [number, number] = [10, 20];
+```
+
+Tuples are commonly seen in things like `useState()` in React — it returns exactly `[value, setterFunction]`, always in that order, always that shape.
+
+---
+
+# Intersection Types
+
+An intersection type **combines multiple types into one**, using the `&` symbol. The resulting type must satisfy ALL combined types at once — the opposite of union (which only needs ONE of the listed types).
+
+```ts
+type Person = {
+  name: string;
+};
+
+type Employee = {
+  employeeId: number;
+};
+
+type StaffMember = Person & Employee;
+
+const staff: StaffMember = {
+  name: "Anjum",
+  employeeId: 1001,
+  // both properties are REQUIRED — missing either one is an error
+};
+```
+
+### Union vs Intersection (quick contrast)
+
+```ts
+type A = { x: number };
+type B = { y: number };
+
+let u: A | B; // needs to satisfy A OR B
+let i: A & B; // needs to satisfy A AND B — must have both x and y
+```
