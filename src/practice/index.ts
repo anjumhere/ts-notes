@@ -80,3 +80,36 @@ function serveOrder(msg? :string){
 serveOrder('pizza')
 
 */
+
+class KulhadChai {
+  serve() {
+    return console.log(`serving kulhad chai`);
+  }
+}
+
+class Cutting {
+  serve() {
+    return console.log(`serving cutting chai`);
+  }
+}
+
+function serve(chai: KulhadChai | Cutting) {
+  if (chai instanceof KulhadChai) {
+    return console.log(chai.serve());
+  }
+  return console.log(chai.serve());
+}
+
+type chaiOrder = {
+  type: string;
+  sugar: number;
+};
+
+function isChaiOrder(obj: any): obj is chaiOrder {
+  return (
+    typeof obj === "object" &&
+    obj !== null &&
+    obj.type === "string" &&
+    obj.sugar === "number"
+  );
+}
