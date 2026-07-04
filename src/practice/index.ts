@@ -1,36 +1,82 @@
-// Union and Any
+// ============================================
+// TOPIC: Union Types
+// ============================================
 
+/*
 let reqStatus: "pending" | "success" | "error";
-
 reqStatus = "pending";
+*/
+// Note: reqStatus can only be assigned one of the values listed in the union.
+// Assigning anything else (e.g. reqStatus = "loading") will throw a type error.
 
-// reqStatus can't be assinged with any other values other than listed in the union
+// ============================================
+// TOPIC: The "any" type
+// ============================================
 
-// Any
-
+/*
 let value: any;
-value = "helo";
+value = "hello";
 value = 44;
 value = undefined;
+*/
+// Note: "any" allows a variable to hold any datatype and removes type-checking
+// entirely. This defeats the purpose of TypeScript and is considered bad practice.
 
-//  value can be initialized with any datatype , it removes the type-checking, this is considered bad practice
+// ============================================
+// TOPIC: Avoiding "any" (using Union instead)
+// ============================================
 
-// here's how to avoid Any (because its considered as bad practice)
+/*
 const orders = ["10", "20", "30", "40"];
-
 let currentOrders: string | undefined;
 
 for (let order of orders) {
-  if (order === "20") {
+  if (order === "000") {
     currentOrders = order;
     break;
   }
+  currentOrders = "100";
 }
 
 console.log(currentOrders);
+*/
+// Note: Instead of using "any", we grant permission to only "string | undefined".
+// This ensures that if currentOrders is never assigned inside the loop, it stays
+// as "undefined" (a valid, expected state) instead of silently allowing any type.
+// This keeps type-safety intact while still handling the "no match found" case.
+
+//==================================
+//TOPIC: TYPE NARROWING
+//==================================
+
 /*
- here we only  granted permission to use string  or undefined , because if  the currentOrders becomes
- undefined , we would get a typeerror  even if we include string | number , so using undefined we are making 
- sure that if the condition fails and currentOrders becomes undefined we would handle that 
+function getOrder(kind: string | number) {
+  if (typeof kind === "string") {
+    return console.log(`The order ${kind} being processed`);
+  }
+  return console.log(`The order no ${kind} is being processed`);
+}
+getOrder(2105);
+*/
+
+// In this code , we have used type narrowing (typeof kind === 'string'), after  implementing
+// - type-narrowing , it gives us suggestiong after we put dot(.) after the kind word ,  because inside the if condition
+// -  we are sure that the type is string so if you are writing code , it helps here to figure out that which dataype we
+// - are working with.
+// If you look at the code outside the if condition the datatype can only be a number since in the union defined only two datatypes
+// - so if we put a dot(.) after the kind outside the if condtion we get all the available method that we can use  on number datatype, which ultimately
+// - helps us figure out what datatype we are working with.
+
+// If you want some truthy value , so we do something like this
+/*
+function serveOrder(msg? :string){
+  if(msg){
+    return console.log(`Serving order ${msg}`)
+  }
+
+  return console.log(`Serving default order`)
+}
+
+serveOrder('pizza')
 
 */

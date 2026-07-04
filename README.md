@@ -8,23 +8,26 @@ Not a tutorial. This is a working log: concepts as I learn them, code as I test 
 
 ```
 typescript/
-├── basics/
-│   └── types-vs-interface.md      # core type system concepts
-├── practice/
-│   └── 01-basic-types.ts          # hands-on exercises
-├── react-ts/
-│   └── typing-hooks.md            # typing useState, useEffect, props, etc.
-├── snippets/
-│   └── useful-utility-types.ts    # reusable utility type patterns
-├── notes.md                       # running notes / compiler internals / misc
+├── src/
+│   ├── basics/
+│   │   └── types-vs-interface.md      # core type system concepts
+│   ├── practice/
+│   │   └── index.ts                   # hands-on exercises
+│   ├── react-ts/
+│   │   └── typing-hooks.md            # typing useState, useEffect, props, etc.
+│   ├── snippets/
+│   │   └── useful-utility-type-ts     # reusable utility type patterns
+│   └── notes.md                       # running notes / compiler internals / misc
+├── package.json
+├── tsconfig.json
 └── README.md
 ```
 
-- **basics/** — fundamental TypeScript concepts (types, interfaces, generics, inference)
-- **practice/** — small `.ts` files where I actually write and test code, not just read about it
-- **react-ts/** — TypeScript specifically in a React context (props, hooks, event types)
-- **snippets/** — copy-paste-ready utility types and patterns for future projects
-- **notes.md** — everything else: compiler internals, gotchas, things I looked up mid-project
+- **src/basics/** — fundamental TypeScript concepts (types, interfaces, generics, inference)
+- **src/practice/** — small `.ts` files where I actually write and test code, not just read about it
+- **src/react-ts/** — TypeScript specifically in a React context (props, hooks, event types)
+- **src/snippets/** — copy-paste-ready utility types and patterns for future projects
+- **src/notes.md** — everything else: compiler internals, gotchas, things I looked up mid-project
 
 ## Why this exists
 
@@ -37,4 +40,4 @@ Learning by documenting. If I can explain it clearly enough to write down, I act
 
 ## Author
 
-**Adnan Anjum** — [GitHub](https://github.com/anjumhere) ·
+**Adnan Anjum** — [GitHub](https://github.com/anjumhere)
