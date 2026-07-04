@@ -41,3 +41,5 @@ Learning by documenting. If I can explain it clearly enough to write down, I act
 ## Author
 
 **Adnan Anjum** — [GitHub](https://github.com/anjumhere)
+Full stack developer
+/gi
