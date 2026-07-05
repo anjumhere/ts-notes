@@ -192,3 +192,9 @@ class Getres implements Response {
   success: boolean = true;
   fail: boolean = false;
 }
+
+// now it won't throw any error. We can use types with classes but sometimes we need to use interace for classesj
+
+// ============================================
+// TOPIC: Intersection
+// ============================================
