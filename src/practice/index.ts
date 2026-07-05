@@ -107,3 +107,28 @@ function handleResponse(res: ApiResponse) {
 // ts looks at apiresponse and it knows there are two possible outcomes (since it has union of error and success)
 // then it sees res.status === 'success' and checks which type's union has  type == success , so
 // only success matches the  successResponse and ts completely eliminates the errorresponse status and puts it inthe else block
+
+// forcefull type-assertion
+// Example
+
+let res: any = "32";
+
+// here if you check the response , the type is still any despite  its setting a value as a string.
+
+// we use as to implement forcefull type-assertion
+// Example
+
+let num: number = (res as string).length;
+
+// here after asserting res as string , and type annotation of num is number , so we are saying that the variable is a number but treat res as a string , since
+// we set the num as a number in the type annotation we can access the methods of a number like .length.
+
+// another example
+
+type Book = {
+  name: string;
+};
+
+const bookString = '{"name": "meditations"}';
+const bookObject = JSON.parse(bookString) as Book;
+console.log(bookObject.name);
