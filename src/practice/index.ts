@@ -68,48 +68,42 @@ getOrder(2105);
 // - helps us figure out what datatype we are working with.
 
 // If you want some truthy value , so we do something like this
-/*
-function serveOrder(msg? :string){
-  if(msg){
-    return console.log(`Serving order ${msg}`)
+// /*
+// function serveOrder(msg? :string){
+//   if(msg){
+//     return console.log(`Serving order ${msg}`)
+//   }
+//
+//   return console.log(`Serving default order`)
+// }
+//
+// serveOrder('pizza')
+
+// exaustive checks to allow only methods/values that want , helpful in multiple things.
+
+// const orderChai = (size: 'small'| 'medium' | 'large'){
+//   if(size === 'small'){
+//     return `serve small chai`
+//   }
+//
+//   if(size === 'medium' || size === 'large'){
+//     return `serve extra chai`
+//   }
+// }
+
+// dicscriminated union
+
+type SuccessResponse = { status: "success"; data: string[] };
+type ErrorResponse = { status: "error"; data: string };
+type ApiResponse = SuccessResponse | ErrorResponse;
+
+function handleResponse(res: ApiResponse) {
+  if (res.status === "success") {
+    return res.data; // ts knows this is a  successResponse
   }
-
-  return console.log(`Serving default order`)
+  return res.data; // ts knows this is an errorResponse
 }
 
-serveOrder('pizza')
-
-*/
-
-class KulhadChai {
-  serve() {
-    return console.log(`serving kulhad chai`);
-  }
-}
-
-class Cutting {
-  serve() {
-    return console.log(`serving cutting chai`);
-  }
-}
-
-function serve(chai: KulhadChai | Cutting) {
-  if (chai instanceof KulhadChai) {
-    return console.log(chai.serve());
-  }
-  return console.log(chai.serve());
-}
-
-type chaiOrder = {
-  type: string;
-  sugar: number;
-};
-
-function isChaiOrder(obj: any): obj is chaiOrder {
-  return (
-    typeof obj === "object" &&
-    obj !== null &&
-    obj.type === "string" &&
-    obj.sugar === "number"
-  );
-}
+// ts looks at apiresponse and it knows there are two possible outcomes (since it has union of error and success)
+// then it sees res.status === 'success' and checks which type's union has  type == success , so
+// only success matches the  successResponse and ts completely eliminates the errorresponse status and puts it inthe else block
