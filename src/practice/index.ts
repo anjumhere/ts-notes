@@ -7,7 +7,7 @@ let reqStatus: "pending" | "success" | "error";
 reqStatus = "pending";
 */
 // Note: reqStatus can only be assigned one of the values listed in the union.
-// Assigning anything else (e.g. reqStatus = "loading") will throw a type error.
+// Assigning anything else (e.g., reqStatus = "loading") will throw a type error.
 
 // ============================================
 // TOPIC: The "any" type
@@ -45,9 +45,9 @@ console.log(currentOrders);
 // as "undefined" (a valid, expected state) instead of silently allowing any type.
 // This keeps type-safety intact while still handling the "no match found" case.
 
-//==================================
-//TOPIC: TYPE NARROWING
-//==================================
+// ============================================
+// TOPIC: Type Narrowing
+// ============================================
 
 /*
 function getOrder(kind: string | number) {
@@ -58,40 +58,40 @@ function getOrder(kind: string | number) {
 }
 getOrder(2105);
 */
+// In this code, we have used type narrowing (typeof kind === 'string'). After implementing
+// type-narrowing, TS gives us suggestions when we put a dot (.) after the 'kind' word because,
+// inside the if condition, we are sure that the type is a string. This helps figure out
+// which datatype we are working with.
 
-// In this code , we have used type narrowing (typeof kind === 'string'), after  implementing
-// - type-narrowing , it gives us suggestiong after we put dot(.) after the kind word ,  because inside the if condition
-// -  we are sure that the type is string so if you are writing code , it helps here to figure out that which dataype we
-// - are working with.
-// If you look at the code outside the if condition the datatype can only be a number since in the union defined only two datatypes
-// - so if we put a dot(.) after the kind outside the if condtion we get all the available method that we can use  on number datatype, which ultimately
-// - helps us figure out what datatype we are working with.
+// Outside the if condition, the datatype can only be a number (since the union only has two types).
+// Putting a dot (.) outside the if condition gives all available number methods.
 
-// If you want some truthy value , so we do something like this
-// /*
-// function serveOrder(msg? :string){
-//   if(msg){
-//     return console.log(`Serving order ${msg}`)
-//   }
-//
-//   return console.log(`Serving default order`)
-// }
-//
-// serveOrder('pizza')
+// Checking for truthy values:
+/*
+function serveOrder(msg?: string) {
+  if (msg) {
+    return console.log(`Serving order ${msg}`);
+  }
+  return console.log(`Serving default order`);
+}
+serveOrder('pizza');
+*/
 
-// exaustive checks to allow only methods/values that want , helpful in multiple things.
+// Exhaustive checks to allow only specific values:
+/*
+const orderChai = (size: 'small' | 'medium' | 'large') => {
+  if (size === 'small') {
+    return `serve small chai`;
+  }
+  if (size === 'medium' || size === 'large') {
+    return `serve extra chai`;
+  }
+};
+*/
 
-// const orderChai = (size: 'small'| 'medium' | 'large'){
-//   if(size === 'small'){
-//     return `serve small chai`
-//   }
-//
-//   if(size === 'medium' || size === 'large'){
-//     return `serve extra chai`
-//   }
-// }
-
-// dicscriminated union
+// ============================================
+// TOPIC: Discriminated Union
+// ============================================
 
 type SuccessResponse = { status: "success"; data: string[] };
 type ErrorResponse = { status: "error"; data: string };
@@ -99,32 +99,28 @@ type ApiResponse = SuccessResponse | ErrorResponse;
 
 function handleResponse(res: ApiResponse) {
   if (res.status === "success") {
-    return res.data; // ts knows this is a  successResponse
+    return res.data; // TS knows this is a SuccessResponse
   }
-  return res.data; // ts knows this is an errorResponse
+  return res.data; // TS knows this is an ErrorResponse
 }
+// TS looks at ApiResponse and knows there are two possible outcomes.
+// When it sees res.status === 'success', it matches SuccessResponse and
+// completely eliminates the ErrorResponse status, putting it in the implicit else block.
 
-// ts looks at apiresponse and it knows there are two possible outcomes (since it has union of error and success)
-// then it sees res.status === 'success' and checks which type's union has  type == success , so
-// only success matches the  successResponse and ts completely eliminates the errorresponse status and puts it inthe else block
-
-// forcefull type-assertion
-// Example
+// ============================================
+// TOPIC: Forceful Type Assertion ("as")
+// ============================================
 
 let res: any = "32";
-
-// here if you check the response , the type is still any despite  its setting a value as a string.
-
-// we use as to implement forcefull type-assertion
-// Example
+// Here, if you check 'res', the type is still 'any' despite setting a string value.
+// We use 'as' to implement forceful type assertion.
 
 let num: number = (res as string).length;
+// By asserting 'res' as a string, we tell TS to treat it as a string.
+// Since 'num' is typed as a number, we can safely assign a string method (.length) that returns a number.
 
-// here after asserting res as string , and type annotation of num is number , so we are saying that the variable is a number but treat res as a string , since
-// we set the num as a number in the type annotation we can access the methods of a number like .length.
-
-// another example
-
+// Another example parsing JSON:
+/*
 type Book = {
   name: string;
 };
@@ -132,3 +128,36 @@ type Book = {
 const bookString = '{"name": "meditations"}';
 const bookObject = JSON.parse(bookString) as Book;
 console.log(bookObject.name);
+*/
+
+// ============================================
+// TOPIC: The "never" type
+// ============================================
+
+type Role = "admin" | "user" | "superAdmin";
+// Add 'superAdmin' later, first check the role with 'admin' and 'user'.
+
+function check(role: Role) {
+  if (role === "admin") {
+    console.log("redirected to admin");
+    return;
+  }
+  if (role === "user") {
+    console.log("redirected to user");
+    return;
+  }
+  if (role === "superAdmin") {
+    console.log("redirected to superAdmin");
+    return;
+  }
+
+  // If a role falls through all checks, TS assigns it the 'never' type
+  // because this line of code should theoretically never be reached.
+  role;
+}
+
+// Example of a function that truly never finishes executing:
+function neverRun(): never {
+  while (true) {}
+}
+// This block will never finish running because it is an infinite loop.
