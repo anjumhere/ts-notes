@@ -327,7 +327,11 @@ updateUser({ name: "anjum", age: 25 });
 // TOPIC: Required <R> utility type
 // // ============================================
 
+// In required utility type , you must fill all the values that are present in the type definition else it
+// will throw an error
+
 type Admin = {
+  id: string;
   name?: string;
   age?: number;
   isValid?: true;
@@ -338,7 +342,27 @@ const getAdmin = (data: Required<Admin>) => {
 };
 
 getAdmin({
+  id: "hs8cnn0oohn2",
   name: "admin",
   age: 23,
   isValid: true,
 });
+
+// ============================================
+// TOPIC: Pick <P> utility type
+// // ============================================
+
+// In the pick utility type you can pick specific data that you want to use. It will continue to throw
+// error until to put the data that has been mentioned in the pick syntax.
+
+type UserPick = Pick<User, "name" | "age">;
+
+const getUser: UserPick = { name: "user", age: 30 };
+
+// ============================================
+// TOPIC: Omit <O> utility type
+// // ============================================
+
+// In Omit utility type , you can skip/exclude or hide a value from your object
+
+type PublicAdmin = Omit<Admin, "id">; // now the admin id is not included in this type defintion
