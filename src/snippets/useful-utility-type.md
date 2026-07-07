@@ -35,28 +35,29 @@ const activeAdmin: ConcreteAdmin = {
   age: 23,
   isValid: true,
 };
-
+```
 ## 2. Selection & Exclusion Utility Types
 ### Pick<T, K>
 Definition: Generates a completely new type matrix by extracting a literal union of specified keys (K) out of a base configuration type T. Any property not listed in the lookup union is omitted.
 
-TypeScript
+```typescript
 type SkeletonUser = Pick<BaseUser, "name" | "age">;
 
 const compactUser: SkeletonUser = {
   name: "User",
   age: 30
 }; // 'isTrue' cannot be passed here
-
+```
 ## 4. Omit<T, K>
 ### Definition: Drops specified keys (K) from a base type declaration T while maintaining every other existing field invariant exactly as originally declared.
 
-TypeScript
+```typescript
 type PublicAdminProfile = Omit<BaseAdmin, "id">;
 
 const sharedProfile: PublicAdminProfile = {
   name: "Anjum"
 }; // The compiler explicitly blocks appending an 'id' attribute here
+```
 💡 Senior Peer Example: Immutable Invariants & Maps
 Readonly<T>
 Definition: Locks down the object properties at compile time by appending a readonly modifier to each key. It prevents reassignment expressions, freezing the pointer reference properties.
@@ -64,7 +65,7 @@ Definition: Locks down the object properties at compile time by appending a read
 Record<K, V>
 Definition: Constructs an object type whose property keys are K and whose property values are V. This utility is exceptional for mapping clean dictionary lookups, router structures, or configuration matrices.
 
-TypeScript
+```typescript
 type ServerConfig = { port: number; host: string };
 const productionConfig: Readonly<ServerConfig> = { port: 5000, host: "127.0.0.1" };
 // productionConfig.port = 3000; // ❌ TS compilation blocks mutation immediately
