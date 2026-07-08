@@ -59,6 +59,11 @@ const appUser = {
   name: "jayce",
   role: UserRole.Admin,
 };
+
+function getRole(userRole: UserRole) {
+  console.log(`The Role of the User is : ${userRole}`);
+}
+getRole(UserRole.Admin);
 if (appUser.role === UserRole.Admin) {
   console.log(`${appUser.name} has full access control.`);
 }
