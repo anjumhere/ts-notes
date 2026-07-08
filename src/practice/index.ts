@@ -311,43 +311,43 @@ Duck Typing in Typescript is usually called structured typing. Ts cares about sh
 
 // You can update any value partially , means its not compulsory to add everything that you mentioned in the
 // type , even if you leave its value empty like empty object, i will not throw an error.
-type User = {
-  name: string;
-  age: number;
-  isTrue: boolean;
-};
-
-function updateUser(update: Partial<User>) {
-  console.log(update.name);
-}
-
-updateUser({ name: "anjum", age: 25 });
-
+// type User = {
+//   name: string;
+//   age: number;
+//   isTrue: boolean;
+// };
+//
+// function updateUser(update: Partial<User>) {
+//   console.log(update.name);
+// }
+//
+// updateUser({ name: "anjum", age: 25 });
+//
 // ============================================
 // TOPIC: Required <R> utility type
 // // ============================================
 
 // In required utility type , you must fill all the values that are present in the type definition else it
 // will throw an error
-
-type Admin = {
-  id: string;
-  name?: string;
-  age?: number;
-  isValid?: true;
-};
-
-const getAdmin = (data: Required<Admin>) => {
-  console.log(data);
-};
-
-getAdmin({
-  id: "hs8cnn0oohn2",
-  name: "admin",
-  age: 23,
-  isValid: true,
-});
-
+//
+// type Admin = {
+//   id: string;
+//   name?: string;
+//   age?: number;
+//   isValid?: true;
+// };
+//
+// const getAdmin = (data: Required<Admin>) => {
+//   console.log(data);
+// };
+//
+// getAdmin({
+//   id: "hs8cnn0oohn2",
+// name: "admin",
+// // age: 23,
+// isValid: true,
+// });
+//
 // ============================================
 // TOPIC: Pick <P> utility type
 // // ============================================
@@ -355,48 +355,50 @@ getAdmin({
 // In the pick utility type you can pick specific data that you want to use. It will continue to throw
 // error until to put the data that has been mentioned in the pick syntax.
 
-type UserPick = Pick<User, "name" | "age">;
-
-const getUser: UserPick = { name: "user", age: 30 };
+// type UserPick = Pick<User, "name" | "age">;
+//
+// const getUser: UserPick = { name: "user", age: 30 };
 
 // ============================================
 // TOPIC: Omit <O> utility type
 // // ============================================
 
 // In Omit utility type , you can skip/exclude or hide a value from your object
-
+/*
 type PublicAdmin = Omit<Admin, "id">; // now the admin id is not included in this type defintion
-
-// ============================================
-// TOPIC: TypeScript Functions & Type Invariants
-// ============================================
-
-/*
- * --- Case 1: Matching Input and Output Types ---
- * Input and output share the exact same primitive or structural contract.
- */
-function findUser(username: string): string {
-  return `User: ${username}`;
-}
-
-/*
- * --- Case 2: Transforming Types (Different Input & Output) ---
- * FIXED: This is completely valid. A function's main job is data transformation.
- * It only errors if your 'return' value doesn't match the stated 'OutputType'.
- */
-function getStringLength(value: string): number {
-  return value.length; /* Takes a string, returns a raw number block. */
-}
+*/
+//
+// // ============================================
+// // TOPIC: TypeScript Functions & Type Invariants
+// // ============================================
+//
+// /*
+//  * --- Case 1: Matching Input and Output Types ---
+//  * Input and output share the exact same primitive or structural contract.
+//  */
+// function findUser(username: string): string {
+//   return `User: ${username}`;
+// }
+//
+// /*
+////
+// * --- Case 2: Transforming Types (Different Input & Output) ---
+// * FIXED: This is completely valid. A function's main job is data transformation.
+// * It only errors if your 'return' value doesn't match the stated 'OutputType'.
+// */
+//function getStringLength(value: string): number {
+//  return value.length; /* Takes a string, returns a raw number block. */
+//}
 
 /*
  * --- Case 3: Implicit Type Inference ---
  * If you leave the output blank, the compiler inspects the execution path
  * of the return statement and assigns the type automatically for you.
  */
-function unknownOutput(value: string) {
-  return value; /* Automatically inferred as type 'string' */
-}
-
+// function unknownOutput(value: string) {
+//   return value; /* Automatically inferred as type 'string' */
+// }
+//
 /*
  * --- Case 4: Complete Absence of Value (void) ---
  * Used when a function executes an action (like mutations or logging) but returns
