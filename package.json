@@ -7,7 +7,7 @@
   "scripts": {
     "clean": "rm -rf dist",
     "build": "npx tsc",
-    "build:run": "npm run clean && npm run build && node dist/practice/index.js"
+    "build:run": "npm run clean && npm run build && node"
   },
   "repository": {
     "type": "git",
