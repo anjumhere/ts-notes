@@ -79,3 +79,27 @@ const check = new Check(100); // capacity is now locked at 100 (overwrote the de
 // check.capacity = 299;      // ❌ error — can't assign to readonly property outside constructor
 console.log(check);
 // Output: Check { capacity: 100 }
+
+//=================================================
+// TOPIC: Getters and Getters
+// ================================================
+
+class Value {
+  private _salary: number = 25000;
+
+  get getsalary() {
+    // to access the private variable salary we will use getter get
+    return this._salary;
+  }
+
+  set salary(value: number) {
+    // to set the value of the private variable _salary we use setter set.
+    if (value < 25000) throw new Error("Salary too low"); // if salary is less then 25000, it
+    // will throw an error
+    this._salary = value; // if salary is greater then 25000 , it will set the new value , which will come as input from the user.
+  }
+}
+
+const sal = new Value();
+sal.salary = 2503430;
+console.log(sal.getsalary);
