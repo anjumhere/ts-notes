@@ -535,3 +535,63 @@ function isValidUser(payload: any): payload is APIUser {
   );
 }
 ```
+
+---
+
+# Object-Oriented Programming (OOP)
+
+TypeScript provides rich support for standard object-oriented patterns with compile-time checks, access control, and syntactic shorthand properties.
+
+## 1. Shorthand Constructor (Parameter Properties)
+Instead of declaring fields first and manually mapping them in constructors, prefixing constructor parameters with modifiers automatically declares and assigns them.
+```ts
+class Employee {
+  constructor(
+    public readonly id: number,
+    public name: string,
+    private salary: number
+  ) {} // Declares and assigns id, name, and salary on instantiate
+}
+```
+
+## 2. Access Modifiers
+- `public` (Default): Visible anywhere.
+- `private`: Visible only within the declaring class.
+- `protected`: Visible to the declaring class and its subclasses.
+
+## 3. Inheritance & Method Overriding
+Use `extends` to inherit. Subclasses calling their own constructors must execute `super()` first to initialize the parent. Subclasses can override methods and refer back to parents with `super.method()`.
+```ts
+class Account {
+  constructor(public id: string, protected balance: number) {}
+}
+
+class SavingsAccount extends Account {
+  constructor(id: string, balance: number, public rate: number) {
+    super(id, balance);
+  }
+}
+```
+
+## 4. Getters & Setters (Accessors)
+Intercept properties on-the-fly to perform validations or computed calculations.
+```ts
+class Temperature {
+  private _celsius = 0;
+
+  get celsius(): number { return this._celsius; }
+  set celsius(val: number) {
+    if (val < -273.15) throw new Error("Below absolute zero!");
+    this._celsius = val;
+  }
+}
+```
+
+## 5. Abstract Classes & Methods
+Abstract classes serve as base blueprints that cannot be instantiated directly. They can contain both concrete methods and abstract declarations that child classes MUST implement.
+```ts
+abstract class Shape {
+  abstract getArea(): number;
+}
+```
+
