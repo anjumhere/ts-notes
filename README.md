@@ -29,7 +29,7 @@ typescript/
 │   │   ├── enums.ts                   # Numeric, string, and heterogeneous enums, and reverse mapping
 │   │   ├── first.ts                   # Empty initial practice file
 │   │   ├── index.ts                   # Consolidated entry point for execution & validation
-│   │   └── oops.ts                    # Object-oriented programming structures (placeholder)
+│   │   └── oops.ts                    # Object-oriented programming: access modifiers, shorthand constructors, inheritance, and abstract classes
 │   ├── react-ts/
 │   │   └── typing-hooks.md            # React typing guides for hooks, state, and props (placeholder)
 │   ├── snippets/
