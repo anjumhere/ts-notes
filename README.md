@@ -10,24 +10,41 @@ Not a tutorial. This is a working log: concepts as I learn them, code as I test 
 typescript/
 ├── src/
 │   ├── basics/
-│   │   └── types-vs-interface.md      # core type system concepts
+│   │   └── types-vs-interface.md      # Core differences: declaration merging, implements, and extends
 │   ├── practice/
-│   │   └── index.ts                   # hands-on exercises
+│   │   ├── 01-union-types.ts          # Union types and limiting assignment values
+│   │   ├── 02-any-type.ts             # The 'any' type and how to safely avoid it using unions
+│   │   ├── 03-type-narrowing.ts       # Narrowing types via typeof, truthiness, and exhaustive checks
+│   │   ├── 04-discriminated-union.ts  # Discriminated unions for reliable api response structures
+│   │   ├── 05-type-assertion.ts       # Forceful type assertion ('as' keyword) with JSON.parse examples
+│   │   ├── 06-never-type.ts           # Exhaustiveness checks and infinite loops with never
+│   │   ├── 07-interfaces-vs-types.ts  # Implementing classes using types vs interfaces
+│   │   ├── 08-intersection.ts         # Combining and intersecting multiple object models with &
+│   │   ├── 09-objects.ts              # Object literal type assignments and nested configurations
+│   │   ├── 10-duck-typing.ts          # Structured/duck-typing compatibility rules
+│   │   ├── 11-partial-and-pick.ts     # Utility types: Partial<T> and Pick<T, K>
+│   │   ├── 12-required-and-omit.ts    # Utility types: Required<T> and Omit<T, K>
+│   │   ├── 13-functions-and-invariants.ts # Functions, optional/defaults, void/never, and custom type predicates
+│   │   ├── arrays.ts                  # Arrays, readonly arrays, 2D arrays, and named tuples
+│   │   ├── enums.ts                   # Numeric, string, and heterogeneous enums, and reverse mapping
+│   │   ├── first.ts                   # Empty initial practice file
+│   │   ├── index.ts                   # Consolidated entry point for execution & validation
+│   │   └── oops.ts                    # Object-oriented programming structures (placeholder)
 │   ├── react-ts/
-│   │   └── typing-hooks.md            # typing useState, useEffect, props, etc.
+│   │   └── typing-hooks.md            # React typing guides for hooks, state, and props (placeholder)
 │   ├── snippets/
-│   │   └── useful-utility-type-ts     # reusable utility type patterns
-│   └── notes.md                       # running notes / compiler internals / misc
+│   │   └── useful-utility-type.md     # Transformation snippets for Readonly<T> and Record<K, V>
+│   └── notes.md                       # Comprehensive Master Handbook for compiler internals & language features
 ├── package.json
 ├── tsconfig.json
 └── README.md
 ```
 
-- **src/basics/** — fundamental TypeScript concepts (types, interfaces, generics, inference)
-- **src/practice/** — small `.ts` files where I actually write and test code, not just read about it
+- **src/basics/** — Fundamental TypeScript concepts (types, interfaces, generics, inference)
+- **src/practice/** — Hands-on `.ts` exercises and files covering specific type mechanics and edge cases
 - **src/react-ts/** — TypeScript specifically in a React context (props, hooks, event types)
-- **src/snippets/** — copy-paste-ready utility types and patterns for future projects
-- **src/notes.md** — everything else: compiler internals, gotchas, things I looked up mid-project
+- **src/snippets/** — Copy-paste-ready utility types and patterns for future projects
+- **src/notes.md** — Master Reference Handbook containing compiler pipeline stages, type system details, and practice exercises
 
 ## Why this exists
 

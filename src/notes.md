@@ -132,14 +132,18 @@ let x = "hello";
 | Checker | Make sure nobody's breaking the rules |
 | Emitter | Throw away the rules, ship the JS     |
 
-# Union and Any
+---
 
-## Union
+# Type System Foundations & Core Types
+
+## Union Types
 
 A union type describes a value that can be one of several types. It's declared by separating each type with a pipe (`|`) symbol.
 
 ```ts
-let value: string | number;
+let reqStatus: "pending" | "success" | "error";
+reqStatus = "pending"; // OK
+// Assigning anything else (e.g., reqStatus = "loading") will throw a type error.
 ```
 
 The variable is restricted to only the types listed in the union.
@@ -155,7 +159,25 @@ value = 42;
 value.whatever(); // no error, even though this would crash at runtime
 ```
 
-# Type Aliases
+### Avoiding "any" (Using Unions Instead)
+
+Instead of opting out of type-safety with `any`, we should narrow allowed values to specific types (e.g., `string | undefined`). This ensures types are checked even when handling fallback states.
+
+```ts
+const orders = ["10", "20", "30", "40"];
+let currentOrders: string | undefined;
+
+for (let order of orders) {
+  if (order === "000") {
+    currentOrders = order;
+    break;
+  }
+  currentOrders = "100";
+}
+// Keeps type-safety intact while handling the "no match found" case gracefully.
+```
+
+## Type Aliases
 
 A `type` alias gives a name to any type — primitives, unions, objects, functions, anything. Once named, you reuse it instead of repeating the shape everywhere.
 
@@ -166,13 +188,13 @@ let userId: ID = 101;
 let productId: ID = "SKU-42";
 ```
 
-Type aliases don't create a new type — they're just a label pointing to an existing type definition. Renaming the alias doesn't change what it represents underneath.
+Type aliases don't create a new type — they're just a label pointing to an existing type definition.
 
 ---
 
-# Interfaces
+# Interfaces & Class Implementation
 
-An `interface` describes the **shape of an object** — what properties and methods it must have, and their types. Unlike `type`, interfaces are specifically built for describing object structures (and can be extended).
+An `interface` describes the **shape of an object** — what properties and methods it must have, and their types.
 
 ```ts
 interface User {
@@ -180,108 +202,336 @@ interface User {
   name: string;
   isActive: boolean;
 }
-
-const anjum: User = {
-  id: 1,
-  name: "Anjum",
-  isActive: true,
-};
 ```
 
-### Interface vs Type Alias (the practical difference)
+### Interface vs Type Alias (Practical Differences)
 
-```ts
-interface Animal {
-  name: string;
-}
-interface Animal {
-  age: number; // merges automatically with the one above
-}
-// Animal now requires both name AND age
-
-type Car = { brand: string };
-type Car = { year: number }; // ERROR — type aliases can't be redeclared
-```
-
-Interfaces can be **declared multiple times and get merged** — TypeScript combines them into one. Type aliases cannot; declaring the same type alias twice is an error. This is the main practical reason libraries often prefer `interface` for public object shapes (so consumers can extend them later).
+1. **Declaration Merging:** Interfaces can be declared multiple times and automatically merge their fields. Type aliases cannot be redeclared.
+   ```ts
+   interface Animal { name: string; }
+   interface Animal { age: number; } // Merged into { name: string; age: number; }
+   ```
+2. **Class `implements`:** Both can be implemented by a class, but a class can only implement a single, definite object shape. A class cannot implement a union type.
+   ```ts
+   // This works perfectly:
+   interface Response { success: boolean; fail: boolean; }
+   class Getres implements Response {
+     success = true;
+     fail = false;
+   }
+   
+   // This fails at compile time:
+   type UnionResponse = { ok: "success" } | { ok: "failure" };
+   // class GetRes implements UnionResponse { ... } // ❌ Error: class can only implement a single definite shape
+   ```
 
 ---
 
-# Literal Types
+# Literal Types & Tuples
 
-A literal type restricts a variable to one **exact, specific value** — not just a general type like `string`, but the literal `"pending"` itself.
+## Literal Types
 
-```ts
-let status: "pending";
-status = "pending"; // OK
-status = "done"; // ERROR — only "pending" is allowed
-```
-
-This becomes genuinely useful combined with a union (which you already know):
+A literal type restricts a variable to one **exact, specific value** — not just a general type like `string`, but the literal value itself.
 
 ```ts
-let reqStatus: "pending" | "success" | "error";
-reqStatus = "success"; // OK
-reqStatus = "loading"; // ERROR — not in the allowed set
+let status: "pending" | "success" | "error";
 ```
 
-Literal types are the building block behind how unions like `"pending" | "success" | "error"` actually work under the hood — each option in that union IS a literal type.
+## Tuples
 
----
-
-# Tuples
-
-A tuple is an array with a **fixed number of elements**, where each position has its own specific type. Regular arrays don't care about position or length — tuples do.
+A tuple is an array with a **fixed number of elements**, where each position has its own specific type.
 
 ```ts
-let user: [string, number];
-user = ["Anjum", 25]; // OK — string first, number second
-user = [25, "Anjum"]; // ERROR — wrong order
-user = ["Anjum", 25, true]; // ERROR — too many elements
+let user: [string, number] = ["Anjum", 25]; // Exactly [string, number]
 ```
 
-### Example — why this matters
-
+### Named Tuples
+Named tuples improve code readability by self-documenting the purpose of each index.
 ```ts
-// Without a tuple, order isn't enforced:
-let coordinates: number[] = [10, 20]; // fine, but so is [1,2,3,4,5]
-
-// With a tuple, exactly 2 numbers, in this order, nothing more:
-let point: [number, number] = [10, 20];
+const NamedTuple: [name: string, age: number] = ["anjum", 23];
 ```
 
-Tuples are commonly seen in things like `useState()` in React — it returns exactly `[value, setterFunction]`, always in that order, always that shape.
+### Readonly Tuples
+Prevents modification of tuple index values.
+```ts
+const Tuples2: readonly [number, string] = [23, "one"];
+// Tuples2[0] = 24; // ❌ Error: Index is read-only
+```
 
 ---
 
 # Intersection Types
 
-An intersection type **combines multiple types into one**, using the `&` symbol. The resulting type must satisfy ALL combined types at once — the opposite of union (which only needs ONE of the listed types).
+An intersection type **combines multiple types into one**, using the `&` symbol. The resulting type must satisfy ALL combined types at once.
 
 ```ts
-type Person = {
+type Person = { name: string };
+type Employee = { employeeId: number };
+type StaffMember = Person & Employee; // Must have both name AND employeeId
+
+// Intersecting directly in function parameters:
+function processCheckout(data: { email: string } & { cardNumber: number }) {
+  console.log(data.email, data.cardNumber);
+}
+```
+
+---
+
+# Type Narrowing & Control Flow
+
+Type narrowing is the process of moving from a broad type to a more specific type using runtime checks.
+
+## 1. Typeof Guards
+Using `typeof` checks lets TypeScript know the exact type within an execution block and suggest safe methods.
+```ts
+function getOrder(kind: string | number) {
+  if (typeof kind === "string") {
+    return console.log(kind.toUpperCase()); // TS knows kind is string
+  }
+  return console.log(kind.toFixed(2)); // TS knows kind is number
+}
+```
+
+## 2. Truthiness Checks
+Handles checking optional parameters safely.
+```ts
+function serveOrder(msg?: string) {
+  if (msg) {
+    return console.log(`Serving: ${msg.toUpperCase()}`); // msg is guaranteed string
+  }
+}
+```
+
+## 3. Discriminated Unions
+Using a shared literal property (called a "discriminant") to let TypeScript safely narrow down members of a union.
+```ts
+type SuccessResponse = { status: "success"; data: string[] };
+type ErrorResponse = { status: "error"; data: string };
+type ApiResponse = SuccessResponse | ErrorResponse;
+
+function handleResponse(res: ApiResponse) {
+  if (res.status === "success") {
+    return res.data; // TS narrows to SuccessResponse (string[])
+  }
+  return res.data; // TS narrows to ErrorResponse (string)
+}
+```
+
+## 4. Forceful Type Assertion (`as`)
+Informs TypeScript that we know the specific type of a variable better than the compiler (e.g., when parsing JSON).
+```ts
+type Book = { name: string };
+const bookString = '{"name": "meditations"}';
+const bookObject = JSON.parse(bookString) as Book; // Forcefully asserted as Book
+```
+
+## 5. The `never` Type for Exhaustive Checks
+When a value is exhausted through all type-narrowing blocks, the remaining possible type is assigned `never`. If a new union member is added later and not handled, TypeScript will flag a compilation error.
+```ts
+type Role = "admin" | "user" | "superAdmin";
+
+function check(role: Role) {
+  if (role === "admin") return "Admin View";
+  if (role === "user") return "User View";
+  if (role === "superAdmin") return "SuperAdmin View";
+  
+  const exhaustiveCheck: never = role; // Safe: role is exhausted
+  return exhaustiveCheck;
+}
+```
+
+---
+
+# Objects & Structural (Duck) Typing
+
+## Declaring Object Shapes
+You can declare object structures using type aliases or inline type annotations.
+```ts
+type Phone = {
   name: string;
-};
-
-type Employee = {
-  employeeId: number;
-};
-
-type StaffMember = Person & Employee;
-
-const staff: StaffMember = {
-  name: "Anjum",
-  employeeId: 1001,
-  // both properties are REQUIRED — missing either one is an error
+  price: number;
+  features: string[];
 };
 ```
 
-### Union vs Intersection (quick contrast)
+## Duck Typing (Structured Typing)
+TypeScript's type system is **structural**, meaning it cares about the shape of an object, not its declared name or brand. If two objects have the same properties, they are considered compatible.
+```ts
+type User = { name: string; age: number };
+const person = { name: "anjum", age: 20, city: "Gilgit" }; // Has extra property 'city'
+
+function printUser(u: User) {
+  console.log(u.name, u.age);
+}
+printUser(person); // OK! 'person' satisfies the shape of 'User'
+```
+
+---
+
+# Arrays in TypeScript
+
+Arrays can be defined with `T[]` or `Array<T>`.
 
 ```ts
-type A = { x: number };
-type B = { y: number };
+const arr: string[] = ["one", "two", "three"];
+const arr2: Array<string> = ["one", "two", "three"];
+```
 
-let u: A | B; // needs to satisfy A OR B
-let i: A & B; // needs to satisfy A AND B — must have both x and y
+### Readonly Arrays
+Prevents array mutations (like `.push()`, `.pop()`, or index reassignment).
+```ts
+const list: readonly string[] = ["one", "two"];
+// list.push("three"); // ❌ Error: Property 'push' does not exist on type 'readonly string[]'
+```
+
+### Multidimensional (2D) Arrays
+```ts
+const table: number[][] = [
+  [1, 2, 3],
+  [4, 5, 6],
+];
+```
+
+---
+
+# Enums (Enumerations)
+
+Enums represent a group of named constants. Unlike types/interfaces, enums compile down to actual runtime JavaScript objects.
+
+## 1. Numeric Enums
+Members start at `0` and auto-increment by default.
+```ts
+enum Direction { Up, Down, Left, Right } // Up = 0, Down = 1...
+```
+You can also assign custom starting values, and the rest will auto-increment:
+```ts
+enum StatusCode {
+  OK = 200,
+  Created, // 201
+  BadRequest = 400,
+  Unauthorized, // 401
+}
+```
+
+## 2. String Enums
+Every member is initialized with a string literal. String enums are highly readable during debugging.
+```ts
+enum UserRole {
+  Admin = "ADMIN",
+  Editor = "EDITOR",
+  Viewer = "VIEWER",
+}
+```
+
+## 3. Reverse Mapping
+Numeric enums support reverse mapping (getting the key name from the value). String enums do NOT.
+```ts
+const nameOfZero = Direction[0]; // "Up"
+```
+
+---
+
+# Mapped Utility Types & Transformations
+
+Transform existing types into new structural blueprints.
+
+### `Partial<T>`
+Makes all properties of `T` optional. Great for database `PATCH` operations.
+```ts
+type User = { name: string; age: number; isTrue: boolean };
+type PartialUser = Partial<User>; // { name?: string; age?: number; isTrue?: boolean; }
+```
+
+### `Required<T>`
+Strips optional flags (`?`), making all properties of `T` mandatory.
+```ts
+type Admin = { id: string; name?: string; age?: number };
+type ConcreteAdmin = Required<Admin>; // { id: string; name: string; age: number; }
+```
+
+### `Pick<T, K>`
+Selects a literal union of keys `K` from `T`.
+```ts
+type SkeletonUser = Pick<User, "name" | "age">; // { name: string; age: number; }
+```
+
+### `Omit<T, K>`
+Excludes specific keys `K` from `T`.
+```ts
+type PublicAdminProfile = Omit<Admin, "id">; // { name?: string; age?: number; }
+```
+
+### `Readonly<T>`
+Appends the `readonly` modifier to all properties of `T` to prevent property mutation.
+```ts
+type ImmutableUser = Readonly<{ port: number; host: string }>;
+```
+
+### `Record<K, V>`
+Constructs an object type with keys of type `K` and values of type `V`. Excellent for dictionaries and routing maps.
+```ts
+const API_ROUTES: Record<"auth" | "jobs", string> = {
+  auth: "/api/v1/auth",
+  jobs: "/api/v1/jobs",
+};
+```
+
+---
+
+# Functions & Type Invariants
+
+Functions have typed inputs and outputs, which may share contracts or transform data.
+
+## 1. Explicit Parameter & Return Types
+```ts
+function findUser(username: string): string {
+  return `User: ${username}`;
+}
+```
+
+## 2. Implicit Type Inference
+If no return type is annotated, TypeScript infers it from the `return` statement's execution path.
+```ts
+function inferString(value: string) {
+  return value; // Inferred as returning type 'string'
+}
+```
+
+## 3. Absence of Value: `void` vs `never`
+- `void` represents a function that executes an action but returns no meaningful data (returns `undefined` implicitly).
+- `never` represents a function that never finishes executing or terminates by throwing an error.
+```ts
+function logMsg(msg: string): void {
+  console.log(msg);
+}
+
+function terminate(msg: string): never {
+  throw new Error(msg);
+}
+```
+
+## 4. Optional & Default Parameters
+Optional parameters are marked with `?` and default parameters use `=`.
+```ts
+function format(msg: string, prefix?: string): string {
+  return prefix ? `${prefix}: ${msg}` : msg;
+}
+
+function tax(amount: number, rate = 0.18): number {
+  return amount * rate;
+}
+```
+
+## 5. Type Predicates (Custom Type Guards)
+Functions that return `parameterName is Type` to explicitly narrow the type for any downstream blocks.
+```ts
+type APIUser = { name: string; email: string };
+
+function isValidUser(payload: any): payload is APIUser {
+  return (
+    payload &&
+    typeof payload.name === "string" &&
+    typeof payload.email === "string"
+  );
+}
 ```

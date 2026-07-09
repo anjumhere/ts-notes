@@ -87,3 +87,31 @@ enum BooleanLikeHeterogeneousEnum {
 
 const directionName = Direction[0]; // Gets the key name "Up"
 console.log("Direction[0] corresponds to key:", directionName); // Output: "Up"
+
+type Person = {
+  name: string;
+  age: number;
+  city: string;
+  skills: string[];
+  status: PersonType;
+};
+enum PersonType {
+  EMPOLOYED = "EMPOLOYED",
+  UNEMPLOYED = "UNEMPLOYED",
+}
+
+const personData: Person = {
+  name: "Anjum",
+  age: 34,
+  city: "Gilgit Baltistan",
+  skills: ["full-stack", "backend-specialist"],
+
+  status: PersonType.EMPOLOYED,
+};
+
+function getData(data: Person) {
+  console.log(data.age);
+  console.log(data.status);
+}
+
+getData(personData);
