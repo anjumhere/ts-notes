@@ -4,6 +4,8 @@
 //Generics let you write functions, classes, or types that work with any type while still preserving type
 //safety — instead of hardcoding a specific type or using any (which loses all type info).
 
+import type { argv0 } from "node:process";
+
 // Basic generic function - T is a placeholder type filled in at call time
 function identity<T>(value: T): T {
   return value;
@@ -23,6 +25,18 @@ interface ApiResponse<T> {
   data: T;
   error: string | null;
 }
+// Another example of interface Generics
+interface Gen<T> {
+  name: T;
+}
+
+const gen: Gen<string> = {
+  name: "ali",
+};
+
+const gen1: Gen<number> = {
+  name: 10,
+};
 // const res: ApiResponse<User> = { data: user, error: null };
 
 // Constraints - restrict what T can be using extends
@@ -38,6 +52,16 @@ function pair<K, V>(key: K, value: V): [K, V] {
   return [key, value];
 }
 pair("age", 25); // [string, number]
+
+// Example 2
+interface valueB {
+  name: string;
+}
+function value<A, B extends valueB>(a: A, b: B): [A, B] {
+  console.log(b.name);
+  return [a, b];
+}
+value("abc", { name: "jayc" });
 
 // Generic class
 class Box<T> {

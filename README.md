@@ -24,10 +24,8 @@ typescript/
 │   │   ├── 10-duck-typing.ts          # Structured/duck-typing compatibility rules
 │   │   ├── 11-partial-and-pick.ts     # Utility types: Partial<T> and Pick<T, K>
 │   │   ├── 12-required-and-omit.ts    # Utility types: Required<T> and Omit<T, K>
-│   │   ├── 13-functions-and-invariants.ts # Functions, optional/defaults, void/never, and custom type
-    |   |-- 14- Generics.ts
-predicates
-
+│   │   ├── 13-functions-and-invariants.ts # Functions, optional/defaults, void/never, and custom type predicates
+│   │   ├── 14-generics.ts             # Generic functions, interfaces, constraints, and classes
 │   │   ├── arrays.ts                  # Arrays, readonly arrays, 2D arrays, and named tuples
 │   │   ├── enums.ts                   # Numeric, string, and heterogeneous enums, and reverse mapping
 │   │   ├── first.ts                   # Empty initial practice file
